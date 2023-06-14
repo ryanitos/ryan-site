@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="coolstyle.css" rel="stylesheet" type="text/css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
+    <title>Ryan's Webpage</title>
+    <style>
+        input[type="text"] {
+            width: 200px;
+            height: 30px;
+        }
+
+        #annoyingaudience {
+            color: rgb(139, 0, 0);
+            padding: 220px;
+            text-align: center;
+            font-family: 'Roboto Condensed';
+            white-space: nowrap;
+        }
+
+        body {
+            font-family: 'Roboto Condensed';
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align:center;">
+        <u>It's time to hack your circadian rhythm.</u>
+    </h1>
+    <h2 style="text-align:center;">There's an optimal time to wake up and go to sleep based on our sleep cycles.
+        Calculate when you should wake up below!</h2>
+    <div class="img-container">
+        <img src="images/zzz.jpeg" style="padding-left: 550px;" width="300" class="floating">
+    </div>
+    <br>
+    <label for="ageInput">Enter your age:</label>
+    <input type="text" id="ageInput">
+    <br>
+    <br>
+    <label for="timeInput">Enter the time (in the format AB:CD PM):</label>
+    <input type="text" id="timeInput">
+    <br>
+    <br>
+    <button onclick="calculateOptimalTime()">Calculate</button>
+    <p id="output"></p>
+
+    <script>
+        function calculateOptimalTime() {
+            var userAge = document.getElementById("ageInput").value;
+            var userTime = document.getElementById("timeInput").value;
+
+            // Split the input into hours and minutes
+            var timeParts = userTime.split(":");
+            var hours = parseInt(timeParts[0]);
+            var minutes = parseInt(timeParts[1]);
+            var period = timeParts[1].split(" ")[1];
+
+            // Error handling #1 
+            if (hours < 0 || minutes < 0) {
+                document.getElementById("output").textContent = "Nice try. Enter a positive time only!";
+                return;
+            }
+
+            // The calculation of wake up time based on age
+            if (userAge > 0 && userAge < 13) {
+                hours += 10;
+            }
+            else if (userAge >= 13 && userAge < 18) {
+                hours += 9;
+            }
+            else if (userAge >= 18) {
+                hours += 7;
+            }
+            else if (userAge >= 60) {
+                hours += 9;
+            }
+            else {
+                document.getElementById("output").textContent = "Please enter a valid age.";
+                return;
+            }
+
+            // Account for change across day (plus some cool ternary operator... maybe java and js are related after all...)
+            if (hours >= 12) {
+                hours -= 12;
+                period = (period === "AM" ? "PM" : "AM");
+            }
+
+            // Error Handling #2
+            if (hours === 0) {
+                hours = 12;
+                period = (period === "AM" ? "PM" : "AM");
+            } else if (hours > 12) {
+                hours -= 12;
+                period = (period === "AM" ? "PM" : "AM");
+            }
+
+             // Additional check for AM or PM
+             if (period !== "AM" && period !== "PM") {
+                document.getElementById("output").textContent = "Please specify whether this is AM or PM. I'm an American.";
+                return;
+            }
+
+            // Format output
+            var outputTime = (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes + " " + period;
+
+            // Display the output
+            document.getElementById("output").textContent = "Optimal time to wake up is at " + outputTime;
+        }
+    </script>
+    <h2 id="annoyingaudience"> Hate it? You can leave by clicking <a href="index.html">this</a>.</p>
+
+</body>
+
+</html>
